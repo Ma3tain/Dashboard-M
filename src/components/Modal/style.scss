@@ -22,7 +22,7 @@ $mobileBigWidth: 480px;
     .modal {
         margin-top: -50px;
         padding: 20px 30px;
-        background: $color-white;
+        background: $color-primary-gray;
         box-shadow: 0 2px 16px rgba($color: $color-primary-darken, $alpha: 0.2);
         border-radius: 4px;
         display: flex;
@@ -38,14 +38,14 @@ $mobileBigWidth: 480px;
             justify-content: space-between;
             font-weight: bold;
             font-size: 18px;
-            color: $color-primary-dark;
+            color: $color-primary;
             text-shadow: 0 2px 6px rgba($color: $color-primary-dark, $alpha: 0.4);
         }
 
         .modal-body {
             margin: 10px 0;
             font-size: 14px;
-            color: $color-primary-darken;
+            color: $color-primary;
         }
 
         .footer {

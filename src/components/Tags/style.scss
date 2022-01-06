@@ -1,4 +1,4 @@
-$height: 22px;
+$height: 35px;
 
 .tags {
     display: flex;
@@ -11,16 +11,49 @@ $height: 22px;
     li {
         position: relative;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: stretch;
         justify-content: center;
-        border: 1px solid $color-primary-dark;
-        color: $color-primary-darken;
+        border: 1px solid $color-primary;
+        color: $color-primary;
+        background-color: $color-primary-gray;
         height: $height;
-        border-radius: math.div($height, 2);
+//      min-width: 74px;
+        width: 135px;
+        border-radius: 2px;
         padding: 0 6px;
         margin: 3px 4px;
-        font-size: 10px;
+        font-size: 12px;
+        position: relative;
+        box-sizing: border-box;
+//          display: inline-block;
+        overflow: hidden;
+        z-index: 0;
+
+        &:hover{
+              color: $color-primary-gray;
+              background: $background;
+              transition: all 0.3s ease 0s
+        }
     }
+
+        li::before {
+              position: absolute;
+              content: "";
+              background: $background;
+              transition-duration: 0.3s;
+              z-index: -1;
+              inset: 0px auto auto 0px;
+              width: 0px;
+              height: 100%;
+              opacity: 1;
+        }
+
+        li:hover::before {
+              width: 100%;
+              height: 100%;
+              opacity: 1;
+        }
 
     li.error {
         color: #fff;
@@ -30,13 +63,18 @@ $height: 22px;
 
     li.tags-selected.error {
         background: linear-gradient(135deg, $color-primary-dark, $color-red);
-        border: none;
-        height: $height + 2px;
-        padding: 0 7px;
+        border-color: $color-red;
+//         height: $height + 2px;
+//         padding: 0 7px;
     }
 
     .tags-selected {
-        background-color: $color-primary-dark;
-        color: #fff;
+        background-color: $background;
+        color: $color-primary-gray;
     }
+
+
+
+
 }
+

@@ -1,16 +1,34 @@
 import classnames from 'classnames'
 import { groupBy } from 'lodash-es'
-import { useMemo, useLayoutEffect, useCallback, useRef, useState, useEffect } from 'react'
-import { Cell, Column, ColumnInstance, TableInstance, TableOptions, useBlockLayout, useFilters, UseFiltersColumnOptions, UseFiltersInstanceProps, UseFiltersOptions, useResizeColumns, UseResizeColumnsColumnProps, UseResizeColumnsOptions, useSortBy, UseSortByColumnOptions, UseSortByColumnProps, UseSortByOptions, useTable } from 'react-table'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+    Cell,
+    Column,
+    ColumnInstance,
+    TableInstance,
+    TableOptions,
+    useBlockLayout,
+    useFilters,
+    UseFiltersColumnOptions,
+    UseFiltersInstanceProps,
+    UseFiltersOptions,
+    useResizeColumns,
+    UseResizeColumnsColumnProps,
+    UseResizeColumnsOptions,
+    useSortBy,
+    UseSortByColumnOptions,
+    UseSortByColumnProps,
+    UseSortByOptions,
+    useTable,
+} from 'react-table'
 import { useLatest, useScroll } from 'react-use'
 
-import { Header, Checkbox, Modal, Icon, Drawer, Card, Button } from '@components'
+import { Button, Card, Checkbox, Drawer, Header, Icon, Input, Modal } from '@components'
 import { fromNow } from '@lib/date'
 import { formatTraffic } from '@lib/helper'
 import { useObject, useVisible } from '@lib/hook'
 import * as API from '@lib/request'
-import { RuleType } from '@models'
-import { useClient, useConnectionStreamReader, useI18n } from '@stores'
+import {useClient, useConnectionStreamReader, useI18n, useVersion} from '@stores'
 
 import { Devices } from './Devices'
 import { ConnectionInfo } from './Info'
@@ -19,6 +37,7 @@ import './style.scss'
 
 enum Columns {
     Host = 'host',
+    Process = 'process',
     Network = 'network',
     Type = 'type',
     Chains = 'chains',
@@ -26,11 +45,13 @@ enum Columns {
     Speed = 'speed',
     Upload = 'upload',
     Download = 'download',
+    UploadSpeed = 'uploadSpeed',
+    DownloadSpeed = 'downloadSpeed',
     SourceIP = 'sourceIP',
     Time = 'time',
 }
 
-const shouldCenter = new Set<string>([Columns.Network, Columns.Type, Columns.Rule, Columns.Speed, Columns.Upload, Columns.Download, Columns.SourceIP, Columns.Time])
+const shouldCenter = new Set<string>([Columns.Network, Columns.Type, Columns.Speed, Columns.Upload, Columns.Download, Columns.SourceIP, Columns.Time])
 
 interface TableColumn<D extends object> extends
     ColumnInstance<D>,
@@ -52,21 +73,20 @@ interface ITableInstance<D extends object> extends
     TableInstance<D>,
     UseFiltersInstanceProps<D> {}
 
-function formatSpeed (upload: number, download: number) {
+function formatSpeed (UL: number, DL: number) {
     switch (true) {
-        case upload === 0 && download === 0:
-            return '-'
-        case upload !== 0 && download !== 0:
-            return `↑ ${formatTraffic(upload)}/s ↓ ${formatTraffic(download)}/s`
-        case upload !== 0:
-            return `↑ ${formatTraffic(upload)}/s`
+        case UL !== 0:
+            return `↑ ${formatTraffic(UL)}/s`
+        case DL !== 0:
+            return `↓ ${formatTraffic(DL)}/s`
         default:
-            return `↓ ${formatTraffic(download)}/s`
+            return '-'
     }
 }
 
 export default function Connections () {
     const { translation, lang } = useI18n()
+    const { meta } = useVersion()
     const t = useMemo(() => translation('Connections').t, [translation])
     const connStreamReader = useConnectionStreamReader()
     const client = useClient()
@@ -91,18 +111,20 @@ export default function Connections () {
             id: c.id,
             host: `${c.metadata.host || c.metadata.destinationIP}:${c.metadata.destinationPort}`,
             chains: c.chains.slice().reverse().join(' / '),
-            rule: c.rule === RuleType.RuleSet ? `${c.rule}(${c.rulePayload})` : c.rule,
+            rule: c.rulePayload ? `${c.rule} :: ${c.rulePayload}` : c.rule,
             time: new Date(c.start).getTime(),
             upload: c.upload,
             download: c.download,
             sourceIP: c.metadata.sourceIP,
             type: c.metadata.type,
+            process: c.metadata.process,
             network: c.metadata.network.toUpperCase(),
             speed: { upload: c.uploadSpeed, download: c.downloadSpeed },
             completed: !!c.completed,
             original: c,
         }),
     ), [connections])
+
     const devices = useMemo(() => {
         const gb = groupBy(connections, 'metadata.sourceIP')
         return Object.keys(gb)
@@ -110,36 +132,41 @@ export default function Connections () {
             .sort((a, b) => a.label.localeCompare(b.label))
     }, [connections])
 
+
+
     // table
     const tableRef = useRef<HTMLDivElement>(null)
     const { x: scrollX } = useScroll(tableRef)
     const columns: Array<TableColumnOption<FormatConnection>> = useMemo(() => [
-        { Header: t(`columns.${Columns.Host}`), accessor: Columns.Host, minWidth: 260, width: 260 },
-        { Header: t(`columns.${Columns.Network}`), accessor: Columns.Network, minWidth: 80, width: 80 },
-        { Header: t(`columns.${Columns.Type}`), accessor: Columns.Type, minWidth: 120, width: 120 },
-        { Header: t(`columns.${Columns.Chains}`), accessor: Columns.Chains, minWidth: 200, width: 200 },
+        { Header: t(`columns.${Columns.Host}`), accessor: Columns.Host, minWidth: 180, width: 180 },
+        { Header: t(`columns.${Columns.Type}`), accessor: Columns.Type, width: 70, maxWidth: 120 },
+        { Header: t(`columns.${Columns.Network}`), accessor: Columns.Network, minWidth: 70, maxWidth: 70 },
+        { Header: t(`columns.${Columns.Chains}`), accessor: Columns.Chains, minWidth: 300, width: 300 },
         { Header: t(`columns.${Columns.Rule}`), accessor: Columns.Rule, minWidth: 140, width: 140 },
-        {
-            id: Columns.Speed,
-            Header: t(`columns.${Columns.Speed}`),
-            accessor (originalRow: FormatConnection) {
-                return [originalRow.speed.upload, originalRow.speed.download]
-            },
-            sortType (rowA, rowB) {
-                const speedA = rowA.original.speed
-                const speedB = rowB.original.speed
-                return speedA.download === speedB.download
-                    ? speedA.upload - speedB.upload
-                    : speedA.download - speedB.download
-            },
-            minWidth: 200,
-            width: 200,
-            sortDescFirst: true,
-        },
         { Header: t(`columns.${Columns.Upload}`), accessor: Columns.Upload, minWidth: 100, width: 100, sortDescFirst: true },
         { Header: t(`columns.${Columns.Download}`), accessor: Columns.Download, minWidth: 100, width: 100, sortDescFirst: true },
-        { Header: t(`columns.${Columns.SourceIP}`), accessor: Columns.SourceIP, minWidth: 140, width: 140, filter: 'equals' },
-        { Header: t(`columns.${Columns.Time}`), accessor: Columns.Time, minWidth: 120, width: 120, sortType (rowA, rowB) { return rowB.original.time - rowA.original.time } },
+        {
+            id: Columns.UploadSpeed,
+            Header: t(`columns.${Columns.UploadSpeed}`),
+            accessor (originalRow: FormatConnection) {
+                return originalRow.speed.upload
+            },
+            minWidth: 110,
+            maxWidth: 110,
+            sortDescFirst: true,
+        },
+        {
+            id: Columns.DownloadSpeed,
+            Header: t(`columns.${Columns.DownloadSpeed}`),
+            accessor (originalRow: FormatConnection) {
+                return originalRow.speed.download
+            },
+            minWidth: 110,
+            maxWidth: 110,
+            sortDescFirst: true,
+        },
+        { Header: t(`columns.${Columns.SourceIP}`), accessor: Columns.SourceIP, minWidth: 100, width: 100, filter: 'equals' },
+        { Header: t(`columns.${Columns.Time}`), accessor: Columns.Time, minWidth: 130, maxWidth: 130, sortType (rowA, rowB) { return rowB.original.time - rowA.original.time } },
     ] as Array<TableColumnOption<FormatConnection>>, [t])
 
     useLayoutEffect(() => {
@@ -175,7 +202,7 @@ export default function Connections () {
             autoResetSortBy: false,
             autoResetFilters: false,
             initialState: { sortBy: [{ id: Columns.Time, desc: false }] },
-        } as ITableOptions<FormatConnection>,
+        } as unknown as ITableOptions<FormatConnection>,
         useResizeColumns,
         useBlockLayout,
         useFilters,
@@ -184,8 +211,10 @@ export default function Connections () {
     const headerGroup = useMemo(() => headerGroups[0], [headerGroups])
     const renderCell = useCallback(function (cell: Cell<FormatConnection>) {
         switch (cell.column.id) {
-            case Columns.Speed:
-                return formatSpeed(cell.value[0], cell.value[1])
+            case Columns.UploadSpeed:
+                return formatSpeed(cell.value, 0)
+            case Columns.DownloadSpeed:
+                return formatSpeed(0, cell.value)
             case Columns.Upload:
             case Columns.Download:
                 return formatTraffic(cell.value)
@@ -237,10 +266,11 @@ export default function Connections () {
     return (
         <div className="page">
             <Header title={t('title')}>
-                <span className="cursor-default flex-1 connections-filter">
-                    {`(${t('total.text')}: ${t('total.upload')} ${formatTraffic(traffic.uploadTotal)} ${t('total.download')} ${formatTraffic(traffic.downloadTotal)})`}
-                </span>
-                <Checkbox className="connections-filter" checked={save} onChange={toggleSave}>{t('keepClosed')}</Checkbox>
+                <div className="cursor-default flex-1 connections-filter flex hidden text-xs md:(flex flex-row text-sm)">
+                    <span className='mr-4'>{`${t('total.upload')} ${formatTraffic(traffic.uploadTotal)}`}</span>
+                    <span className='mr-4'>{`${t('total.download')} ${formatTraffic(traffic.downloadTotal)}`}</span>
+                    </div>
+                <Checkbox className="connections-filter text-xs md:text-sm" checked={save} onChange={toggleSave}>{t('keepClosed')}</Checkbox>
                 <Icon className="connections-filter dangerous" onClick={show} type="close-all" size={20} />
             </Header>
             { devices.length > 1 && <Devices devices={devices} selected={device} onChange={handleDeviceSelected} /> }
@@ -257,9 +287,13 @@ export default function Connections () {
                                         className={classnames('connections-th', {
                                             resizing: realColumn.isResizing,
                                             fixed: scrollX > 0 && realColumn.id === Columns.Host,
+                                            meta: realColumn.id === Columns.Process && !meta
                                         })}
                                         key={id}>
-                                        <div {...realColumn.getSortByToggleProps()}>
+                                        <div {...realColumn.getSortByToggleProps()}
+                                            className={classnames( {
+                                            meta: realColumn.id === Columns.Process && !meta
+                                        })}>
                                             {column.render('Header')}
                                             {
                                                 realColumn.isSorted
@@ -292,6 +326,7 @@ export default function Connections () {
                                                     'connections-block',
                                                     { 'text-center': shouldCenter.has(cell.column.id), completed: row.original.completed },
                                                     { fixed: scrollX > 0 && cell.column.id === Columns.Host },
+                                                    {  meta: cell.column.id === Columns.Process && !meta },
                                                 )
                                                 return (
                                                     <div {...cell.getCellProps()} className={classname} key={cell.column.id}>
@@ -310,7 +345,7 @@ export default function Connections () {
             <Modal title={t('closeAll.title')} show={visible} onClose={hide} onOk={handleCloseConnections}>{t('closeAll.content')}</Modal>
             <Drawer containerRef={cardRef} visible={drawerState.visible} width={450}>
                 <div className="flex h-8 justify-between items-center">
-                    <span className="font-bold pl-3">{t('info.title')}</span>
+                    <span className="font-bold pl-3 text-orange-400">{t('info.title')}</span>
                     <Icon type="close" size={16} className="cursor-pointer" onClick={() => setDrawerState('visible', false)} />
                 </div>
                 <ConnectionInfo className="mt-3 px-5" connection={drawerState.connection} />

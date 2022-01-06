@@ -5,8 +5,18 @@
     border-radius: 3px;
     cursor: pointer;
     transition: color .3s ease;
+    line-height:22px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid $color-primary-gray;
 
     &.selected {
-        color: $color-primary-dark;
+        color: $color-primary;
+        background-color: $color-primary-gray;
     }
+     @media (max-width: 768px) {
+     display:none !important;
+     }
 }
+
+

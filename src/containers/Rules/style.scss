@@ -5,7 +5,7 @@
     overflow: hidden;
     list-style: none;
     user-select: none;
-    border-bottom: 1px solid rgba($color: $color-primary-lightly, $alpha: 0.5);
+    border-bottom: 1px solid $background;
 
     .drag-handler {
         cursor: row-resize;

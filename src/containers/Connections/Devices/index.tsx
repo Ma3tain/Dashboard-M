@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { BaseComponentProps } from '@models'
 import { useI18n } from '@stores'
 import './style.scss'
+import { Input } from '@components'
 
 interface DevicesProps extends BaseComponentProps {
     devices: Array<{ label: string, number: number }>
@@ -23,7 +24,7 @@ export function Devices (props: DevicesProps) {
 
     return (
         <div className={classname} style={style}>
-            <div className={classnames('connections-devices-item pt-2 mb-2', { selected: props.selected === '' })} onClick={() => handleSelected('')}>
+            <div className={classnames('connections-devices-item mb-2 text-xs', { selected: props.selected === '' })} onClick={() => handleSelected('')}>
                 { t('filter.all') }
             </div>
             {
@@ -31,7 +32,7 @@ export function Devices (props: DevicesProps) {
                     device => (
                         <div
                             key={device.label}
-                            className={classnames('connections-devices-item pt-2 mb-2', { selected: props.selected === device.label })}
+                            className={classnames('connections-devices-item mb-2 text-xs', { selected: props.selected === device.label })}
                             onClick={() => handleSelected(device.label)}>
                             { device.label } ({ device.number })
                         </div>

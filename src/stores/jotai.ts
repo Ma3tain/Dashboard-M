@@ -19,7 +19,7 @@ import { StreamReader } from '@lib/streamer'
 import * as Models from '@models'
 import { Log } from '@models/Log'
 
-import { useAPIInfo, useClient } from './request'
+import { localStorageAtom, useAPIInfo, useClient } from './request'
 
 export const identityAtom = atom(true)
 
@@ -44,6 +44,7 @@ export function useI18n () {
 
 export const version = atom({
     version: '',
+    meta: false,
     premium: false,
 })
 
@@ -58,8 +59,8 @@ export function useVersion () {
 
         set(
             result.isErr()
-                ? { version: '', premium: false }
-                : { version: result.value.data.version, premium: !!result.value.data.premium },
+                ? { version: '', meta: false, premium: false }
+                : { version: result.value.data.version, meta: !!result.value.data.meta, premium: !!result.value.data.premium },
         )
     })
 
@@ -67,11 +68,12 @@ export function useVersion () {
 }
 
 export function useRuleProviders () {
+    const [{ meta }] = useAtom(version)
     const [{ premium }] = useAtom(version)
     const client = useClient()
 
-    const { data, mutate } = useSWR(['/providers/rule', client, premium], async () => {
-        if (!premium) {
+    const { data, mutate } = useSWR(['/providers/rule', client, meta, premium], async () => {
+        if (!meta && !premium) {
             return []
         }
 
@@ -290,3 +292,4 @@ export function useConnectionStreamReader () {
         [apiInfo.secret, url, useWebsocket, version.version],
     )
 }
+

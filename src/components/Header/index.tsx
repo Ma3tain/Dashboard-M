@@ -13,6 +13,6 @@ export function Header (props: HeaderProps) {
 
     return <header className={classnames('header', className)} style={style}>
         <h1 className="md:text-xl">{title}</h1>
-        <div className="flex flex-auto items-center justify-end">{children}</div>
+        <div className="flex flex-auto items-center justify-end" style={{paddingLeft:'40px'}}>{children}</div>
     </header>
 }

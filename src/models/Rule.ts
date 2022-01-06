@@ -9,6 +9,7 @@ export enum RuleType {
     DstPort = 'DstPort',
     MATCH = 'MATCH',
     RuleSet = 'RuleSet',
+    GeoSite = 'GeoSite'
 }
 
 export interface Rule {

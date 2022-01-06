@@ -29,7 +29,7 @@ export function ButtonSelect (props: ButtonSelectProps) {
                     <button
                         value={option.value}
                         key={option.value}
-                        className={classnames('button-select-options', { actived: value === option.value })}
+                        className={classnames('button-select-options', { actived: value === option.value },'flex-wrap')}
                         onClick={() => onSelect?.(option.value)}>
                         { option.label }
                     </button>

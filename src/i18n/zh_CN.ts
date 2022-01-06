@@ -16,9 +16,11 @@ const CN = {
             setAsSystemProxy: '设置为系统代理',
             allowConnectFromLan: '允许来自局域网的连接',
             proxyMode: '代理模式',
-            socks5ProxyPort: 'Socks5 代理端口',
-            httpProxyPort: 'HTTP 代理端口',
-            mixedProxyPort: '混合代理端口',
+            logLevel: '信息等级',
+            socks5ProxyPort: 'Socks5 端口',
+            redirProxyPort: 'Redir 端口',
+            httpProxyPort: 'HTTP 端口',
+            mixedProxyPort: '混合端口',
             externalController: '外部控制设置',
         },
         values: {
@@ -66,6 +68,7 @@ const CN = {
         columns: {
             host: '域名',
             network: '网络',
+            process: '进程',
             type: '类型',
             chains: '节点链',
             rule: '规则',
@@ -73,6 +76,8 @@ const CN = {
             speed: '速率',
             upload: '上传',
             download: '下载',
+            uploadSpeed: '上传速率',
+            downloadSpeed: '下载速率',
             sourceIP: '来源 IP',
         },
         info: {
@@ -86,6 +91,7 @@ const CN = {
             upload: '上传',
             download: '下载',
             network: '网络',
+            process: '进程',
             inbound: '入口',
             rule: '规则',
             chains: '代理',
@@ -118,7 +124,7 @@ const CN = {
         expandText: '展开',
         collapseText: '收起',
         speedTestText: '测速',
-        breakConnectionsText: '切换时打断包含策略组的连接',
+        breakConnectionsText: '切换时打断已有连接',
     },
     Modal: {
         ok: '确 定',

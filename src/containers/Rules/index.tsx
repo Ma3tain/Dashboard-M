@@ -18,7 +18,7 @@ function RuleProviders () {
             providers.length !== 0 &&
             <div className="flex flex-col">
                 <Header title={t('providerTitle')} />
-                <Card className="divide-y rounded shadow-primary mt-4 p-0">
+                <Card className="divide-y rounded mt-4 p-0">
                     {
                         providers.map(p => (
                             <Provider key={p.name} provider={p} />

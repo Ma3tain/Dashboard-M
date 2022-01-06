@@ -2,11 +2,14 @@
     display: flex;
     align-items: flex-start;
     font-size: 14px;
-    color: $color-black-light;
+    color: $color-primary-gray;
+    font-weight: 500;
 }
 
 .proxies-group-item {
-    border-bottom: 1px solid $color-gray;
+    border-bottom: 1px solid $color-primary;
+    border-radius: 2px;
+     font-family: "TwEmoji" !important;
 
     &:last-child {
         border-bottom: none;

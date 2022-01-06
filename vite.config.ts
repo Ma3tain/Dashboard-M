@@ -15,13 +15,14 @@ export default defineConfig(
                 injectRegister: 'inline',
                 manifest: {
                     icons: [{
-                        src: '//cdn.jsdelivr.net/gh/Dreamacro/clash-dashboard/src/assets/Icon.png',
-                        sizes: '512x512',
-                        type: 'image/png',
-                    }],
-                    start_url: '/',
-                    short_name: 'Clash Dashboard',
-                    name: 'Clash Dashboard',
+                        src: 'src/assets/MerlinClash.icon',
+                    },
+                    {
+                        src: 'src/assets/MerlinClash.icns',
+                    },
+                    ],
+                    short_name: 'Merlin Clash',
+                    name: 'Merlin Clash',
                 },
             }),
         ],

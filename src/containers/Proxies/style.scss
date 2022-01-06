@@ -47,12 +47,12 @@
 }
 
 .proxies-speed-test {
-    line-height: 32px;
-    margin: 0 2px 0 6px;
-    color: $color-primary-dark;
-    text-shadow: 0 2px 6px rgba($color: $color-primary-dark, $alpha: 0.4);
-    cursor: pointer;
-}
+        line-height: 32px;
+        margin: 0 2px 0 6px;
+        color: $color-primary-dark;
+        text-shadow: 0 2px 6px rgba($color: $color-primary-dark, $alpha: 0.4);
+        cursor: pointer;
+    }
 
 @media (max-width: 768px) {
     .proxies-list {
@@ -67,4 +67,5 @@
             margin-bottom: 10px;
         }
     }
+
 }

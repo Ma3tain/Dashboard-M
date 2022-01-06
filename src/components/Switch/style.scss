@@ -42,8 +42,8 @@ $width: 32px;
         height: $switch-radius;
         width: $switch-radius;
         border-radius: math.div($switch-radius, 2);
-        background-color: $color-white;
-        box-shadow: 0 0 8px rgba($color-primary-dark, 0.4);
+        background-color: $color-primary-gray;
+//         box-shadow: 0 0 8px rgba($color-primary-gray, 0.4);
         transition: transform 0.3s ease;
         transform: translateX(-$switch-offset);
     }

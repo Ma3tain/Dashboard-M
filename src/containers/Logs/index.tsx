@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
-import { useLayoutEffect, useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useEffect, useRef, useState, useMemo } from 'react'
 
 import { Card, Header } from '@components'
 import { Log } from '@models/Log'
 import { useI18n, useLogsStreamReader } from '@stores'
 
 import './style.scss'
+import classnames from "classnames";
 
 export default function Logs () {
     const listRef = useRef<HTMLUListElement>(null)
@@ -15,6 +16,12 @@ export default function Logs () {
     const { t } = translation('Logs')
     const logsStreamReader = useLogsStreamReader()
     const scrollHeightRef = useRef(listRef.current?.scrollHeight ?? 0)
+    const InfoColors = {
+        '#909399': 'debug',
+        '#57b366': 'info',
+        '#ff9a28': 'warning',
+        '#ff3e5e': 'error',
+    }
 
     useLayoutEffect(() => {
         const ul = listRef.current
@@ -38,7 +45,6 @@ export default function Logs () {
 
         return () => logsStreamReader?.unsubscribe('data', handleLog)
     }, [logsStreamReader])
-
     return (
         <div className="page">
             <Header title={ t('title') } />
@@ -47,9 +53,17 @@ export default function Logs () {
                     {
                         logs.map(
                             (log, index) => (
-                                <li className="leading-5 inline-block" key={index}>
-                                    <span className="mr-4 text-gray-400 text-opacity-90">{ dayjs(log.time).format('YYYY-MM-DD HH:mm:ss') }</span>
-                                    <span>[{ log.type }] { log.payload }</span>
+                                <li className="leading-5 inline-block " style={{fontSize:'11px'}} key={index}>
+                                    <span className="mr-2 text-orange-400">[{ dayjs(log.time).format('YYYY-MM-DD HH:mm:ss') }]</span>
+                                    <>
+                                         <span className={classnames( {
+                                             'text-teal-400': log.type === 'debug',
+                                             'text-rose-400' : log.type === 'error',
+                                             'text-pink-400': log.type === 'warning',
+                                             'text-sky-400': log.type === 'info',
+                                         })}>[{ log.type.toUpperCase() }]</span>
+                                    </>
+                                    <span> { log.payload }</span>
                                 </li>
                             ),
                         )

@@ -1,11 +1,14 @@
 import { useAtom } from 'jotai'
-import { useMemo } from 'react'
-
+import {useCallback, useLayoutEffect, useMemo} from 'react'
 import { Tags, Tag } from '@components'
 import { Group as IGroup } from '@lib/request'
 import { useProxy, useConfig, proxyMapping, useClient } from '@stores'
 
 import './style.scss'
+import {ResultAsync} from "neverthrow";
+import {AxiosError} from "axios";
+import EE, {Action} from "@lib/event";
+import {isClashX, jsBridge} from "@lib/jsBridge";
 
 interface GroupProps {
     config: IGroup
@@ -49,19 +52,20 @@ export function Group (props: GroupProps) {
     const canClick = config.type === 'Selector'
     return (
         <div className="proxy-group">
-            <div className="flex h-10 mt-4 w-full items-center justify-between md:(h-15 mt-0 w-auto) ">
-                <span className="h-6 px-5 w-35 overflow-hidden overflow-ellipsis whitespace-nowrap md:w-30">{ config.name }</span>
-                <Tag className="mr-5 md:mr-0">{ config.type }</Tag>
+            <div className="flex h-10 mt-2 w-full items-center justify-between md:(h-11 mt-4 w-auto flex-col) ">
+                <span className="h-6 px-5 w-2/3 overflow-hidden overflow-ellipsis whitespace-nowrap md:w-36 cursor-default" title={config.name}>{ config.name }</span>
+                <Tag className="mr-5 md:mr-0 cursor-default ">{ config.type }</Tag>
             </div>
-            <div className="flex-1 py-2 md:py-4">
+            <div className="flex-1 pb-4 md:py-4">
                 <Tags
-                    className="ml-5 md:ml-8"
+                    className="mx-5 md:ml-8"
                     data={config.all}
                     onClick={handleChangeProxySelected}
                     errSet={errSet}
                     select={config.now}
                     canClick={canClick}
-                    rowHeight={30} />
+                    rowHeight={42}
+                    />
             </div>
         </div>
     )

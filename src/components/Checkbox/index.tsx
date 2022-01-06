@@ -19,7 +19,7 @@ export function Checkbox (props: CheckboxProps) {
     }
 
     return (
-        <div className={classname} onClick={handleClick}>
+        <div className={classname}  onClick={handleClick}>
             <Icon className="checkbox-icon" type="check" size={18} />
             <div>{ props.children }</div>
         </div>

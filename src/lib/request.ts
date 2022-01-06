@@ -56,7 +56,7 @@ interface History {
 
 export interface Proxy {
     name: string
-    type: 'Direct' | 'Reject' | 'Shadowsocks' | 'Vmess' | 'Socks' | 'Http' | 'Snell'
+    type: 'Direct' | 'Reject' | 'Shadowsocks' | 'ShadowsocksR' | 'Vmess' | 'Socks' | 'Http' | 'Snell'
     history: History[]
 }
 
@@ -78,6 +78,7 @@ export interface Connections {
     id: string
     metadata: {
         network: string
+        process: string
         type: string
         host: string
         sourceIP: string
@@ -153,7 +154,7 @@ export class Client {
     }
 
     async getVersion () {
-        return await this.axiosClient.get<{ version: string, premium?: boolean }>('version')
+        return await this.axiosClient.get<{ version: string, meta?: boolean, premium?: boolean}>('version')
     }
 
     async getProxyDelay (name: string) {

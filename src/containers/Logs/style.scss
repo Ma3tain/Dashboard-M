@@ -6,9 +6,10 @@
     list-style: none;
     padding: 10px;
     border-radius: 2px;
-    background-color: $color-gray-light;
+    background-color: $color-primary-grayed;
     font-size: 12px;
-    color: #73808f;
+    color: $color-primary-gray;
     overflow-y: auto;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
+

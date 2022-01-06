@@ -17,7 +17,7 @@ interface ProxyProps extends BaseComponentProps {
 
 const TagColors = {
     '#909399': 0,
-    '#00c520': 260,
+    '#57b366': 260,
     '#ff9a28': 600,
     '#ff3e5e': Infinity,
 }
@@ -49,6 +49,7 @@ export function Proxy (props: ProxyProps) {
         })
     }, [config.name, getDelay, set])
 
+
     const delay = useMemo(
         () => config.history?.length ? config.history.slice(-1)[0].delay : 0,
         [config],
@@ -73,7 +74,7 @@ export function Proxy (props: ProxyProps) {
         <div className={classnames('proxy-item', { 'proxy-error': hasError }, className)}>
             <span className="proxy-type" style={{ backgroundColor }}>{config.type}</span>
             <p className="proxy-name">{config.name}</p>
-            <p className="proxy-delay">{delay === 0 ? '-' : `${delay}ms`}</p>
+            <p className="proxy-delay" style={{ color }}>{delay === 0 ? '-' : `${delay}ms`}</p>
         </div>
     )
 }

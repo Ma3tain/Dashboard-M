@@ -5,18 +5,19 @@
     .label {
         font-size: 14px;
         color: $color-primary-darken;
+        line-height:30px
     }
 
     .external-controller {
         font-size: 14px;
-        color: $color-primary-darken;
+        color: #fa4951;
         display: flex;
         justify-content: flex-end;
         font-weight: normal;
         line-height: 17px;
 
         &.modify-btn {
-            color: $color-primary;
+            color: rgb(251 146 60);
             cursor: pointer;
         }
     }

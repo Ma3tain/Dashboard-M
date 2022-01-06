@@ -6,16 +6,18 @@ $height: 30px;
     width: 100%;
     padding: 0 10px;
     font-size: 14px;
-    color: $color-primary-darken;
+    color: $color-primary;
     border-radius: 3px;
-    border: 1px solid $color-primary-lightly;
+    border: 1px solid $color-primary;
+    background-color: $color-primary-gray;
     transition: all 0.3s;
     transition-property: border-color, color, box-shadow;
 
     &:focus {
         outline: 0;
         border-color: $color-primary;
-        color: $color-primary-dark;
+        color: $color-primary-lightly;
+        background-color: $color-primary;
         box-shadow: 0 2px 5px rgba($color: $color-primary, $alpha: 0.5);
     }
 }

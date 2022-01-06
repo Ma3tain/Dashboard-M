@@ -29,13 +29,14 @@
 }
 
 .button-normal {
-    color: $color-gray-darken;
-    background: $color-white;
-    border: 1px solid rgba($color: $color-black, $alpha: 0.1);
+    color: $color-primary;
+    background: $color-primary-gray;
+    border: 1px solid $color-primary;
 
     &:hover {
-        border-color: $color-gray-dark;
-        color: $color-primary-darken;
+        border-color: $color-primary;
+        color: $color-primary-gray;
+        background:  $color-primary;
     }
 
     &:active {

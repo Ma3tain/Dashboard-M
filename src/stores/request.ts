@@ -45,7 +45,7 @@ export function useAPIInfo () {
 
     const qs = new URLSearchParams(location.search)
 
-    const hostname = qs.get('host') ?? localStorage?.[0]?.hostname ?? url?.hostname ?? '127.0.0.1'
+    const hostname = qs.get('host') ?? qs.get('hostname') ?? localStorage?.[0]?.hostname ?? url?.hostname ?? '127.0.0.1'
     const port = qs.get('port') ?? localStorage?.[0]?.port ?? url?.port ?? '9090'
     const secret = qs.get('secret') ?? localStorage?.[0]?.secret ?? url?.username ?? ''
     const protocol = qs.get('protocol') ?? hostname === '127.0.0.1' ? 'http:' : (url?.protocol ?? window.location.protocol)

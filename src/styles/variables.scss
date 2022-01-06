@@ -3,12 +3,14 @@
  * Style Common Variables
  */
 
-$background: #f4f5f6;
-
+$background: #16222A;
+$background-dark:#0E1518;
 // primary colors
-$color-primary: #57befc;
-$color-primary-dark: #2c8af8;
-$color-primary-darken: #54759a;
+$color-primary: #16222A;
+$color-primary-gray: #A2ADB5;
+$color-primary-grayed: #2b3f4c;
+$color-primary-dark: #A2ADB5;
+$color-primary-darken: #A2ADB5;
 $color-primary-light: #7fcae4;
 $color-primary-lightly: #e4eaef;
 
@@ -44,7 +46,7 @@ $breakpoints: (
         max-width: 960px
     ),
     'md': (
-        min-width: 961px
+        min-width: 962px
     )
     and
     (
