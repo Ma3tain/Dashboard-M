@@ -5,10 +5,6 @@ import { Group as IGroup } from '@lib/request'
 import { useProxy, useConfig, proxyMapping, useClient } from '@stores'
 
 import './style.scss'
-import {ResultAsync} from "neverthrow";
-import {AxiosError} from "axios";
-import EE, {Action} from "@lib/event";
-import {isClashX, jsBridge} from "@lib/jsBridge";
 
 interface GroupProps {
     config: IGroup
@@ -59,6 +55,7 @@ export function Group (props: GroupProps) {
             <div className="flex-1 pb-4 md:py-4">
                 <Tags
                     className="mx-5 md:ml-8"
+                    title={config.name}
                     data={config.all}
                     onClick={handleChangeProxySelected}
                     errSet={errSet}

@@ -28,12 +28,7 @@ export function Proxy (props: ProxyProps) {
     const client = useClient()
 
     const getDelay = useCallback(async (name: string) => {
-        if (isClashX()) {
-            const delay = await jsBridge?.getProxyDelay(name) ?? 0
-            return delay
-        }
-
-        const { data: { delay } } = await client.getProxyDelay(name)
+         const { data: { delay } } = await client.getProxyDelay(name)
         return delay
     }, [client])
 
