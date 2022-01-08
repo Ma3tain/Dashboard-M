@@ -7,7 +7,6 @@ import EE, { Action } from '@lib/event'
 import { Proxy as IProxy } from '@lib/request'
 import { BaseComponentProps } from '@models'
 import { useClient, useProxy } from '@stores'
-
 import './style.scss'
 
 interface ProxyProps extends BaseComponentProps {
@@ -23,7 +22,7 @@ const TagColors = {
 
 export function Proxy (props: ProxyProps) {
     const { config, className } = props
-    const { set } = useProxy()
+    const { proxies, set } = useProxy()
     const client = useClient()
 
     const getDelay = useCallback(async (name: string) => {
@@ -32,17 +31,20 @@ export function Proxy (props: ProxyProps) {
     }, [client])
 
     const speedTest = useCallback(async function () {
-        const result = await ResultAsync.fromPromise(getDelay(config.name), e => e as AxiosError)
+        for (let match of proxies){
+            if (match.name === config.name){
+                const result = await ResultAsync.fromPromise(getDelay(config.name), e => e as AxiosError)
+                const validDelay = result.isErr() ? 0 : result.value
 
-        const validDelay = result.isErr() ? 0 : result.value
-        set(draft => {
-            const proxy = draft.proxies.find(p => p.name === config.name)
-            if (proxy != null) {
-                proxy.history.push({ time: Date.now().toString(), delay: validDelay })
+                set(draft => {
+                    const proxy = draft.proxies.find(p => p.name === config.name)
+                    if (proxy != null) {
+                        proxy.history.push({ time: Date.now().toString(), delay: validDelay })
+                    }
+                })
             }
-        })
-    }, [config.name, getDelay, set])
-
+        }
+    }, [config.name, getDelay, set, proxies])
 
     const delay = useMemo(
         () => config.history?.length ? config.history.slice(-1)[0].delay : 0,

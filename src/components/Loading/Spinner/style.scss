@@ -1,8 +1,8 @@
 .spinner {
     position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 100%;
+    width: 32px;
+    height: 100%;
+    border-radius: 50%;
     animation: spinner 5s infinite linear;
 }
 

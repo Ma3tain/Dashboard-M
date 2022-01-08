@@ -7,11 +7,10 @@ import {proxyMapping, useClient, useI18n, useProxy} from '@stores'
 import './style.scss'
 import {useAtom} from "jotai";
 import {Icon} from "@components/Icon";
-import {handleNotitySpeedTest} from "@containers/Proxies";
 import {ResultAsync} from "neverthrow";
 import {AxiosError} from "axios";
-import EE, {Action} from "@lib/event";
-
+import {Loading} from "@components/Loading";
+import {useVisible} from "@lib/hook";
 
 interface TagsProps extends BaseComponentProps {
     title: string
@@ -49,7 +48,10 @@ export function Tags (props: TagsProps) {
 
     const client = useClient()
 
+    const { visible, hide, show } = useVisible()
+
     async function handleNotityGroupTest() {
+        show ()
         for (let group of groups) {
             if (group.name === title) {
                 for (let proxy of group.all) {
@@ -66,8 +68,10 @@ export function Tags (props: TagsProps) {
                         }
                     }
                 }
+                break
             }
         }
+        hide ()
     }
 
     const getDelay = useCallback(async (name: string) => {
@@ -107,13 +111,17 @@ export function Tags (props: TagsProps) {
             }
 
             return (
-                <li className={tagClass} key={t} onClick={() => handleClick(t)}>
-                    <span className={'overflow-hidden whitespace-nowrap overflow-ellipsis'} title={t}>{t}</span>
-                    <div className={'flex flex-row justify-between'}>
-                        <p style={{fontSize:'xx-small'}}>{proxyType === 'Shadowsocks'? 'SS': proxyType === 'ShadowsocksR'? 'SSR': proxyType? proxyType : groupType }</p>
-                        <p style={{fontSize:'xx-small',textAlign:'end' , color }}> {history?.length && delay !== 0 ? delay + 'ms' : ''} </p>
-                    </div>
-                </li>
+                    <li className={tagClass} key={t} onClick={() => handleClick(t)}>
+                        <span className={'overflow-hidden whitespace-nowrap overflow-ellipsis'} title={t}>{t}</span>
+                        <div className={'flex flex-row justify-between'}>
+                            <p style={{fontSize: 'xx-small'}}>{proxyType === 'Shadowsocks' ? 'SS' : proxyType === 'ShadowsocksR' ? 'SSR' : proxyType ? proxyType : groupType}</p>
+                            <p style={{
+                                fontSize: 'xx-small',
+                                textAlign: 'end',
+                                color
+                            }}> {history?.length && delay !== 0 ? delay + 'ms' : ''} </p>
+                        </div>
+                    </li>
             )
         })
 
@@ -123,10 +131,10 @@ export function Tags (props: TagsProps) {
                 { tags }
             </ul>
             <div className={'flex flex-row justify-end'} style={{width: '80px'}}>
-            <div>
-                <Icon className="h-7 select-none leading-7 text-xs text-center speed-icon cursor-pointer" type="speed" size={10} onClick={ handleNotityGroupTest }/>
-                <span className="proxies-speed-test h-7 select-none cursor-pointer leading-7 text-xs text-center" onClick={ handleNotityGroupTest}>{t('speedTestText')}</span>
-            </div>
+                <div>
+                <Icon className="h-7 select-none leading-7 text-xs text-center speed-icon cursor-pointer" type="speed" size={10} onClick={ handleNotityGroupTest } />
+                <span className="proxies-speed-test h-7 select-none cursor-pointer leading-7 text-xs text-center rule-provider-loading" onClick={ handleNotityGroupTest}>{t('speedTestText')}</span>
+                </div>
                 {
                 title !== "GLOBAL" && showExtend &&
                     <span className="h-7 select-none cursor-pointer leading-7 text-xs text-center" style={{paddingLeft:'10px'}} onClick={toggleExtend}> { expand ? t('collapseText') : t('expandText') } </span>

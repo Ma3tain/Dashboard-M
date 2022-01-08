@@ -29,26 +29,26 @@
   transition-duration: 0.25s;
 
 }
-.proxy-provider-item:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: $background-dark;
-  -webkit-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transform-origin: 0 50%;
-  transform-origin: 0 50%;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transition-duration: 0.25s;
-  transition-duration: 0.25s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
+// .proxy-provider-item:before {
+//   content: "";
+//   position: absolute;
+//   z-index: -1;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background: $background-dark;
+//   -webkit-transform: scaleX(0);
+//   transform: scaleX(0);
+//   -webkit-transform-origin: 0 50%;
+//   transform-origin: 0 50%;
+//   -webkit-transition-property: transform;
+//   transition-property: transform;
+//   -webkit-transition-duration: 0.25s;
+//   transition-duration: 0.25s;
+//   -webkit-transition-timing-function: ease-out;
+//   transition-timing-function: ease-out;
+// }
 
 .proxy-provider-item:hover:before, .proxy-provider-item:focus:before, .proxy-provider-item:active:before {
   -webkit-transform: scaleX(1);

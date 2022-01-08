@@ -37,23 +37,23 @@ $height: 35px;
         }
     }
 
-        li::before {
-              position: absolute;
-              content: "";
-              background: $background;
-              transition-duration: 0.3s;
-              z-index: -1;
-              inset: 0px auto auto 0px;
-              width: 0px;
-              height: 100%;
-              opacity: 1;
-        }
-
-        li:hover::before {
-              width: 100%;
-              height: 100%;
-              opacity: 1;
-        }
+//         li::before {
+//               position: absolute;
+//               content: "";
+//               background: $background;
+//               transition-duration: 0.3s;
+//               z-index: -1;
+//               inset: 0px auto auto 0px;
+//               width: 0px;
+//               height: 100%;
+//               opacity: 1;
+//         }
+//
+//         li:hover::before {
+//               width: 100%;
+//               height: 100%;
+//               opacity: 1;
+//         }
 
     li.error {
         color: #fff;
@@ -72,9 +72,7 @@ $height: 35px;
         background-color: $background;
         color: $color-primary-gray;
     }
-
-
-
-
 }
+
+
 
