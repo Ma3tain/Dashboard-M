@@ -120,10 +120,11 @@ const EN = {
         },
         groupTitle: 'Policy Group',
         providerTitle: 'Providers',
+        providerCount: 'Total',
         providerUpdateTime: 'Last updated at',
         expandText: 'Expand',
-        collapseText: 'Collapse',
-        speedTestText: 'Speed Test',
+        collapseText: 'Close',
+        speedTestText: 'Test',
         breakConnectionsText: 'Break Connections',
     },
     Modal: {

@@ -312,21 +312,22 @@ export default function Connections () {
 
                     <div {...getTableBodyProps()} className="flex-1">
                         {
-                            rows.map(row => {
+                            rows.map((row,i)=> {
                                 prepareRow(row)
                                 return (
                                     <div
                                         {...row.getRowProps()}
-                                        className="cursor-default connections-item select-none"
+                                        className = {classnames("cursor-default connections-item select-none",{ tableRow: i % 2 ===0 })}
                                         key={row.original.id}
                                         onClick={() => handleConnectionSelected(row.original.id)}>
                                         {
-                                            row.cells.map(cell => {
+                                            row.cells.map((cell )=> {
                                                 const classname = classnames(
                                                     'connections-block',
                                                     { 'text-center': shouldCenter.has(cell.column.id), completed: row.original.completed },
                                                     { fixed: scrollX > 0 && cell.column.id === Columns.Host },
-                                                    {  meta: cell.column.id === Columns.Process && !meta },
+                                                    { fixed2: scrollX > 0 && cell.column.id === Columns.Host && i % 2 ===0 },
+                                                    { meta: cell.column.id === Columns.Process && !meta },
                                                 )
                                                 return (
                                                     <div {...cell.getCellProps()} className={classname} key={cell.column.id}>

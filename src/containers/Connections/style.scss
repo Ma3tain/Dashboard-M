@@ -103,6 +103,14 @@
             background-color: $color-primary-grayed;
             box-shadow: inset -9px 0 8px -14px $color-black;
                         }
+        &.fixed2 {
+                    position: sticky;
+                    left: 0;
+                    z-index: 998;
+                    background-color: #253642;
+                    box-shadow: inset -9px 0 8px -14px $color-black;
+                                }
+
         @media (min-width: 768px) {
 
         }
@@ -125,4 +133,8 @@
 
 .meta{
     display: none !important
+}
+
+.tableRow {
+    background-color: #253642;
 }
