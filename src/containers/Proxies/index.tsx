@@ -46,8 +46,6 @@ function ProxyGroups () {
             list.length !== 0 &&
             <div className="flex flex-col">
                 <Header title={t('groupTitle')} >
-                    <Icon className="speed-icon" type="speed" size={20} onClick={handleNotitySpeedTest}/>
-                    <span className="proxies-speed-test text-xs md:text-sm" style={{paddingRight:'10px'}} onClick={handleNotitySpeedTest}>{t('speedTestText')}</span>
                     <Checkbox
                         className="cursor-pointer text-xs md:text-sm text-shadow-primary text-primary-600"
                         checked={config.breakConnections}

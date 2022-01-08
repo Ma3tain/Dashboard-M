@@ -1,13 +1,16 @@
 import classnames from 'classnames'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useLayoutEffect, useRef, useState} from 'react'
 
 import {noop} from '@lib/helper'
 import {BaseComponentProps} from '@models'
-import {proxyMapping, useClient, useGeneral, useI18n, useProxy} from '@stores'
+import {proxyMapping, useClient, useI18n, useProxy} from '@stores'
 import './style.scss'
 import {useAtom} from "jotai";
-import { Group as IGroup } from '@lib/request'
-import {values} from "lodash-es";
+import {Icon} from "@components/Icon";
+import {handleNotitySpeedTest} from "@containers/Proxies";
+import {ResultAsync} from "neverthrow";
+import {AxiosError} from "axios";
+import EE, {Action} from "@lib/event";
 
 
 interface TagsProps extends BaseComponentProps {
@@ -27,7 +30,8 @@ export function Tags (props: TagsProps) {
     const [expand, setExpand] = useState(false)
     const [showExtend, setShowExtend] = useState(false)
     const [proxyMap] = useAtom(proxyMapping)
-    const { groups } = useProxy()
+    const { proxies , groups } = useProxy()
+    const { set } = useProxy()
 
     const ulRef = useRef<HTMLUListElement>(null)
 
@@ -43,9 +47,36 @@ export function Tags (props: TagsProps) {
         setExpand(!expand)
     }
 
+    const client = useClient()
+
+    async function handleNotityGroupTest() {
+        for (let group of groups) {
+            if (group.name === title) {
+                for (let proxy of group.all) {
+                    for (let match of proxies){
+                        if (proxy === match.name){
+                            const result = await ResultAsync.fromPromise(getDelay(proxy), e => e as AxiosError)
+                            const validDelay = result.isErr() ? 0 : result.value
+                            set(draft => {
+                                const proxymatch = draft.proxies.find(p => p.name === proxy)
+                                if (proxymatch != null) {
+                                    proxymatch.history.push({time: Date.now().toString(), delay: validDelay})
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const getDelay = useCallback(async (name: string) => {
+        const { data: { delay } } = await client.getProxyDelay(name)
+        return delay
+    }, [client])
+
     const tags = data
         .map( t => {
-
             const tagClass = classnames({
                 'tags-selected': select === t,
                 'cursor-pointer': canClick,
@@ -91,10 +122,16 @@ export function Tags (props: TagsProps) {
             <ul ref={ulRef} className={classnames('tags', { expand })}>
                 { tags }
             </ul>
-            {
+            <div className={'flex flex-row justify-end'} style={{width: '80px'}}>
+            <div>
+                <Icon className="h-7 select-none leading-7 text-xs text-center speed-icon cursor-pointer" type="speed" size={10} onClick={ handleNotityGroupTest }/>
+                <span className="proxies-speed-test h-7 select-none cursor-pointer leading-7 text-xs text-center" onClick={ handleNotityGroupTest}>{t('speedTestText')}</span>
+            </div>
+                {
                 title !== "GLOBAL" && showExtend &&
-                    <span className="h-7 select-none cursor-pointer leading-7 text-xs text-center" onClick={toggleExtend}> { expand ? t('collapseText') : t('expandText') } </span>
-            }
+                    <span className="h-7 select-none cursor-pointer leading-7 text-xs text-center" style={{paddingLeft:'10px'}} onClick={toggleExtend}> { expand ? t('collapseText') : t('expandText') } </span>
+                }
+            </div>
         </div>
     )
 }

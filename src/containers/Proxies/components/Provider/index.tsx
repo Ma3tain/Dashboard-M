@@ -32,8 +32,8 @@ export function Provider (props: ProvidersProps) {
 
     useLayoutEffect(() => {
         const handler = () => {  client.healthCheckProvider(provider.name).then(async () => await update()).finally(() => hide()) }
-        EE.subscribe(Action.SPEED_NOTIFY, handler)
-        return () => EE.unsubscribe(Action.SPEED_NOTIFY, handler)
+        EE.subscribe(Action.Provider_NOTIFY, handler)
+        return () => EE.unsubscribe(Action.Provider_NOTIFY, handler)
     }, [])
 
     function handleUpdate () {
