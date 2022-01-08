@@ -4,7 +4,6 @@ import { ResultAsync } from 'neverthrow'
 import { useMemo, useLayoutEffect, useCallback } from 'react'
 
 import EE, { Action } from '@lib/event'
-import { isClashX, jsBridge } from '@lib/jsBridge'
 import { Proxy as IProxy } from '@lib/request'
 import { BaseComponentProps } from '@models'
 import { useClient, useProxy } from '@stores'

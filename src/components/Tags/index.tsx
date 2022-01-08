@@ -79,8 +79,8 @@ export function Tags (props: TagsProps) {
                 <li className={tagClass} key={t} onClick={() => handleClick(t)}>
                     <span className={'overflow-hidden whitespace-nowrap overflow-ellipsis'} title={t}>{t}</span>
                     <div className={'flex flex-row justify-between'}>
-                        <p style={{fontSize:'x-small'}}>{proxyType === 'Shadowsocks'? 'SS': proxyType === 'ShadowsocksR'? 'SSR': proxyType? proxyType : groupType }</p>
-                        <p style={{fontSize:'x-small',textAlign:'end' , color }}> {history?.length && delay !== 0 ? delay + 'ms' : ''} </p>
+                        <p style={{fontSize:'xx-small'}}>{proxyType === 'Shadowsocks'? 'SS': proxyType === 'ShadowsocksR'? 'SSR': proxyType? proxyType : groupType }</p>
+                        <p style={{fontSize:'xx-small',textAlign:'end' , color }}> {history?.length && delay !== 0 ? delay + 'ms' : ''} </p>
                     </div>
                 </li>
             )

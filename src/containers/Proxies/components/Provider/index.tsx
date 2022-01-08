@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import {useLayoutEffect, useMemo} from 'react'
 
 import { Card, Tag, Icon, Loading } from '@components'
 import { compareDesc } from '@containers/Proxies'
@@ -9,6 +9,7 @@ import { Provider as IProvider, Proxy as IProxy } from '@lib/request'
 import { useClient, useI18n, useProxyProviders } from '@stores'
 
 import './style.scss'
+import EE, {Action} from "@lib/event";
 
 interface ProvidersProps {
     provider: IProvider
@@ -28,6 +29,12 @@ export function Provider (props: ProvidersProps) {
         show()
         client.healthCheckProvider(provider.name).then(async () => await update()).finally(() => hide())
     }
+
+    useLayoutEffect(() => {
+        const handler = () => {  client.healthCheckProvider(provider.name).then(async () => await update()).finally(() => hide()) }
+        EE.subscribe(Action.SPEED_NOTIFY, handler)
+        return () => EE.unsubscribe(Action.SPEED_NOTIFY, handler)
+    }, [])
 
     function handleUpdate () {
         show()

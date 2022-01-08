@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import {useCallback, useLayoutEffect, useMemo} from 'react'
+import { useMemo } from 'react'
 import { Tags, Tag } from '@components'
 import { Group as IGroup } from '@lib/request'
 import { useProxy, useConfig, proxyMapping, useClient } from '@stores'
