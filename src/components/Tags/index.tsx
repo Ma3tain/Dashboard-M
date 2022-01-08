@@ -9,8 +9,6 @@ import {useAtom} from "jotai";
 import {Icon} from "@components/Icon";
 import {ResultAsync} from "neverthrow";
 import {AxiosError} from "axios";
-import {Loading} from "@components/Loading";
-import {useVisible} from "@lib/hook";
 
 interface TagsProps extends BaseComponentProps {
     title: string
@@ -31,6 +29,7 @@ export function Tags (props: TagsProps) {
     const [proxyMap] = useAtom(proxyMapping)
     const { proxies , groups } = useProxy()
     const { set } = useProxy()
+    const [loading, setloading] = useState(false)
 
     const ulRef = useRef<HTMLUListElement>(null)
 
@@ -48,10 +47,8 @@ export function Tags (props: TagsProps) {
 
     const client = useClient()
 
-    const { visible, hide, show } = useVisible()
-
     async function handleNotityGroupTest() {
-        show ()
+        setloading(true)
         for (let group of groups) {
             if (group.name === title) {
                 for (let proxy of group.all) {
@@ -71,7 +68,7 @@ export function Tags (props: TagsProps) {
                 break
             }
         }
-        hide ()
+        setTimeout(function (){setloading(false)}, 500)
     }
 
     const getDelay = useCallback(async (name: string) => {
@@ -126,20 +123,31 @@ export function Tags (props: TagsProps) {
         })
 
     return (
-        <div className={classnames('flex items-start overflow-y-hidden transition-all', className)} style={{ height: title=="GLOBAL"? "AUTO": rowHeight}}>
-            <ul ref={ulRef} className={classnames('tags', { expand })}>
-                { tags }
-            </ul>
-            <div className={'flex flex-row justify-end'} style={{width: '80px'}}>
-                <div>
-                <Icon className="h-7 select-none leading-7 text-xs text-center speed-icon cursor-pointer" type="speed" size={10} onClick={ handleNotityGroupTest } />
-                <span className="proxies-speed-test h-7 select-none cursor-pointer leading-7 text-xs text-center rule-provider-loading" onClick={ handleNotityGroupTest}>{t('speedTestText')}</span>
-                </div>
-                {
-                title !== "GLOBAL" && showExtend &&
-                    <span className="h-7 select-none cursor-pointer leading-7 text-xs text-center" style={{paddingLeft:'10px'}} onClick={toggleExtend}> { expand ? t('collapseText') : t('expandText') } </span>
-                }
+        <>
+            <div id="facebook" style={{display: loading? '' : 'none' }}>
+                <div className="bar"/>
+                <div className="bar"/>
+                <div className="bar"/>
             </div>
-        </div>
+            <div className={classnames('flex items-start overflow-y-hidden transition-all', className)}
+                 style={{height: title == "GLOBAL" ? "AUTO" : rowHeight, display: loading? 'none' : '' }}>
+                <ul ref={ulRef} className={classnames('tags', {expand})}>
+                    {tags}
+                </ul>
+                <div className={'flex flex-row justify-end'} style={{width: '80px'}}>
+                    <div>
+                        <Icon className="h-7 select-none leading-7 text-xs text-center speed-icon cursor-pointer"
+                              type="speed" size={10} onClick={handleNotityGroupTest}/>
+                        <span
+                            className="proxies-speed-test h-7 select-none cursor-pointer leading-7 text-xs text-center rule-provider-loading"
+                            onClick={handleNotityGroupTest}>{t('speedTestText')}</span>
+                    </div>
+                    {title !== "GLOBAL" && showExtend &&
+                        <span className="h-7 select-none cursor-pointer leading-7 text-xs text-center"
+                              style={{paddingLeft: '10px'}}
+                              onClick={toggleExtend}> {expand ? t('collapseText') : t('expandText')} </span>}
+                </div>
+            </div>
+        </>
     )
 }
