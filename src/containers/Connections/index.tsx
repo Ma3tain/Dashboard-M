@@ -266,7 +266,7 @@ export default function Connections () {
     return (
         <div className="page">
             <Header title={t('title')}>
-                <div className="cursor-default flex-1 connections-filter flex hidden text-xs md:(flex flex-row text-sm)">
+                <div className="cursor-default flex-1 connections-filter flex flex-col text-xs md:(flex flex-row text-sm)">
                     <span className='mr-4'>{`${t('total.upload')} ${formatTraffic(traffic.uploadTotal)}`}</span>
                     <span className='mr-4'>{`${t('total.download')} ${formatTraffic(traffic.downloadTotal)}`}</span>
                     </div>

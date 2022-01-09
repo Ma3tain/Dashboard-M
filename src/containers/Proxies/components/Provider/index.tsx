@@ -1,4 +1,4 @@
-import {useLayoutEffect, useMemo} from 'react'
+import {useLayoutEffect, useMemo, useState} from 'react'
 
 import { Card, Tag, Icon, Loading } from '@components'
 import { compareDesc } from '@containers/Proxies'
@@ -22,12 +22,16 @@ export function Provider (props: ProvidersProps) {
 
     const { provider } = props
     const { t } = translation('Proxies')
-
+    const [expand, setExpand] = useState(false)
     const { visible, hide, show } = useVisible()
 
     function handleHealthChech () {
         show()
         client.healthCheckProvider(provider.name).then(async () => await update()).finally(() => hide())
+    }
+
+    function toggleExtend () {
+        setExpand(!expand)
     }
 
     useLayoutEffect(() => {
@@ -61,9 +65,10 @@ export function Provider (props: ProvidersProps) {
                     }
                     <Icon className="cursor-pointer text-red pl-5" type="healthcheck" size={18} onClick={handleHealthChech} />
                     <Icon className="cursor-pointer pl-5" type="update" size={18} onClick={handleUpdate} />
+                    <span className="tag rule-provider-behavior cursor-pointer right-[-20px] md:right-0" onClick={toggleExtend} style={{margin: '0 0 0 20px',position:'relative'}} > {expand ? t('collapseText') : t('expandText')}</span>
                 </div>
             </div>
-            <ul className="proxies-list">
+            <ul className="proxies-list" style={{display: expand ? '' : 'none' }}>
                 {
                     proxies.map((p: IProxy) => (
                         <li key={p.name}>
