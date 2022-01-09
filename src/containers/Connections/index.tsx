@@ -139,22 +139,8 @@ export default function Connections () {
     const { x: scrollX } = useScroll(tableRef)
     const columns: Array<TableColumnOption<FormatConnection>> = useMemo(() => [
         { Header: t(`columns.${Columns.Host}`), accessor: Columns.Host, minWidth: 180, width: 180 },
-        { Header: t(`columns.${Columns.Type}`), accessor: Columns.Type, width: 70, maxWidth: 120 },
-        { Header: t(`columns.${Columns.Network}`), accessor: Columns.Network, minWidth: 70, maxWidth: 70 },
-        { Header: t(`columns.${Columns.Chains}`), accessor: Columns.Chains, minWidth: 300, width: 300 },
-        { Header: t(`columns.${Columns.Rule}`), accessor: Columns.Rule, minWidth: 140, width: 140 },
-        { Header: t(`columns.${Columns.Upload}`), accessor: Columns.Upload, minWidth: 100, width: 100, sortDescFirst: true },
         { Header: t(`columns.${Columns.Download}`), accessor: Columns.Download, minWidth: 100, width: 100, sortDescFirst: true },
-        {
-            id: Columns.UploadSpeed,
-            Header: t(`columns.${Columns.UploadSpeed}`),
-            accessor (originalRow: FormatConnection) {
-                return originalRow.speed.upload
-            },
-            minWidth: 110,
-            maxWidth: 110,
-            sortDescFirst: true,
-        },
+        { Header: t(`columns.${Columns.Upload}`), accessor: Columns.Upload, minWidth: 100, width: 100, sortDescFirst: true },
         {
             id: Columns.DownloadSpeed,
             Header: t(`columns.${Columns.DownloadSpeed}`),
@@ -165,8 +151,22 @@ export default function Connections () {
             maxWidth: 110,
             sortDescFirst: true,
         },
-        { Header: t(`columns.${Columns.SourceIP}`), accessor: Columns.SourceIP, minWidth: 100, width: 100, filter: 'equals' },
+        {
+            id: Columns.UploadSpeed,
+            Header: t(`columns.${Columns.UploadSpeed}`),
+            accessor (originalRow: FormatConnection) {
+                return originalRow.speed.upload
+            },
+            minWidth: 110,
+            maxWidth: 110,
+            sortDescFirst: true,
+        },
+        { Header: t(`columns.${Columns.Chains}`), accessor: Columns.Chains, minWidth: 300, width: 300 },
+        { Header: t(`columns.${Columns.Rule}`), accessor: Columns.Rule, minWidth: 140, width: 140 },
         { Header: t(`columns.${Columns.Time}`), accessor: Columns.Time, minWidth: 130, maxWidth: 130, sortType (rowA, rowB) { return rowB.original.time - rowA.original.time } },
+        { Header: t(`columns.${Columns.SourceIP}`), accessor: Columns.SourceIP, minWidth: 100, width: 100, filter: 'equals' },
+        { Header: t(`columns.${Columns.Type}`), accessor: Columns.Type, Width: 70, maxWidth: 140 },
+        { Header: t(`columns.${Columns.Network}`), accessor: Columns.Network, minWidth: 70, maxWidth: 70 },
     ] as Array<TableColumnOption<FormatConnection>>, [t])
 
     useLayoutEffect(() => {
