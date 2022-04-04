@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { NavLink } from 'react-router-dom'
 
-import logo from '@assets/img.png'
+import logo from '@assets/logo.png'
 import { Lang, Language } from '@i18n'
 import { useI18n, useVersion } from '@stores'
 import './style.scss'
