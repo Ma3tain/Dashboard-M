@@ -117,8 +117,8 @@ export default function Settings () {
 
     return (
         <div className="page">
-            <Header title={t('title')} />
-            <>{
+            <Header title={t('title')} />    
+            {
                 clashXData?.isClashX && <Card className="settings-card">
                     <div className="flex flex-wrap">
                         <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
@@ -132,7 +132,7 @@ export default function Settings () {
                         </div>
                     </div>
                 </Card>
-            }</>
+            }
             <Card className="settings-card">
                 <div className="flex flex-wrap">
                     <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between ">
