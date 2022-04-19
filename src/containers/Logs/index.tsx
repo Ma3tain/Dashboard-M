@@ -1,28 +1,38 @@
 import dayjs from 'dayjs'
 import { useLayoutEffect, useEffect, useRef, useState, useMemo } from 'react'
 
-import { Card, Header } from '@components'
+import { ButtonSelect, Card, Header } from '@components'
 import { Log } from '@models/Log'
-import { useI18n, useLogsStreamReader } from '@stores'
+import { useGeneral, useI18n, useLogsStreamReader } from '@stores'
 
 import './style.scss'
 import classnames from "classnames";
+import { camelCase } from 'lodash-es'
 
 export default function Logs () {
     const listRef = useRef<HTMLUListElement>(null)
     const logsRef = useRef<Log[]>([])
     const [logs, setLogs] = useState<Log[]>([])
+    const {general} = useGeneral()
     const { translation } = useI18n()
     const { t } = translation('Logs')
     const logsStreamReader = useLogsStreamReader()
     const scrollHeightRef = useRef(listRef.current?.scrollHeight ?? 0)
+    const [refresh, setRefresh] = useState(false)
     const InfoColors = {
         '#909399': 'debug',
         '#57b366': 'info',
         '#ff9a28': 'warning',
         '#ff3e5e': 'error',
     }
-
+    const {logLevel} = general
+    const logLevelOptions = [
+        { label: ('debug'), value: 'debug' },
+        { label: ('info'), value: 'info' },
+        { label: ('warn'), value: 'warning' },
+        { label: ('error'), value: 'error' },
+        { label: ('silent'), value: 'silent' },
+    ]
     useLayoutEffect(() => {
         const ul = listRef.current
         if (ul != null && scrollHeightRef.current === (ul.scrollTop + ul.clientHeight)) {
@@ -36,18 +46,31 @@ export default function Logs () {
             logsRef.current = logsRef.current.slice().concat(newLogs.map(d => ({ ...d, time: new Date() })))
             setLogs(logsRef.current)
         }
-
+        refresh && setTimeout(() => setRefresh(false))
         if (logsStreamReader != null) {
             logsStreamReader.subscribe('data', handleLog)
             logsRef.current = logsStreamReader.buffer()
             setLogs(logsRef.current)
         }
 
+        
         return () => logsStreamReader?.unsubscribe('data', handleLog)
-    }, [logsStreamReader])
+    }, [logsStreamReader,refresh])
+        const doRefresh = () => setRefresh(true)
+    async function handleLogLevelChange(logLevel: string) {
+        general.logLevel = logLevel
+        doRefresh()
+    }
     return (
         <div className="page">
-            <Header title={ t('title') } />
+            <Header title={t('title')} />
+            <div className="flex flex-wrap w-full ">
+                <ButtonSelect 
+                            options={logLevelOptions}
+                            value={camelCase(logLevel)}
+                            onSelect={handleLogLevelChange}
+                />
+            </div>
             <Card className="flex flex-col flex-1 mt-2.5 md:mt-4">
                 <ul className="logs-panel" ref={listRef}>
                     {
@@ -73,3 +96,4 @@ export default function Logs () {
         </div>
     )
 }
+
