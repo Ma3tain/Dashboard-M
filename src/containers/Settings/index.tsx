@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react'
 import { ButtonSelect, ButtonSelectOptions, Card, Header, Input, Switch } from '@components'
 import { Lang } from '@i18n'
 import { useObject } from '@lib/hook'
-import { identityAtom, useAPIInfo, useClient, useGeneral, useI18n, useVersion } from '@stores'
+import { identityAtom, useAPIInfo, useClient, useGeneral, useI18n, useVersion, useLogsStreamReader } from '@stores'
 import './style.scss'
 
 const languageOptions: ButtonSelectOptions[] = [{ label: '中文', value: 'zh_CN' }, { label: 'English', value: 'en_US' }]
@@ -41,6 +41,7 @@ export default function Settings () {
     async function handleLogLevelChange (logLevel: string) {
         await client.updateConfig({ 'log-level': logLevel })
         await fetchGeneral()
+        
     }
 
     function changeLanguage (language: Lang) {
@@ -118,14 +119,6 @@ export default function Settings () {
                             options={proxyModeOptions}
                             value={capitalize(mode)}
                             onSelect={handleProxyModeChange}
-                        />
-                    </div>
-                    <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between  ">
-                        <span className="font-bold label">{t('labels.logLevel')}</span>
-                        <ButtonSelect
-                            options={logLevelOptions}
-                            value={camelCase(logLevel)}
-                            onSelect={handleLogLevelChange}
                         />
                     </div>
                 </div>
