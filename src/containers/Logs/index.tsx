@@ -18,7 +18,7 @@ export default function Logs () {
     const { t } = translation('Logs')
     const logsStreamReader = useLogsStreamReader()
     const scrollHeightRef = useRef(listRef.current?.scrollHeight ?? 0)
-    const [refresh, setRefresh] = useState(false)
+    const [logchange,setLogchange] = useState(false) 
     const InfoColors = {
         '#909399': 'debug',
         '#57b366': 'info',
@@ -46,7 +46,6 @@ export default function Logs () {
             logsRef.current = logsRef.current.slice().concat(newLogs.map(d => ({ ...d, time: new Date() })))
             setLogs(logsRef.current)
         }
-        refresh && setTimeout(() => setRefresh(false))
         if (logsStreamReader != null) {
             logsStreamReader.subscribe('data', handleLog)
             logsRef.current = logsStreamReader.buffer()
@@ -55,11 +54,11 @@ export default function Logs () {
 
         
         return () => logsStreamReader?.unsubscribe('data', handleLog)
-    }, [logsStreamReader,refresh])
-        const doRefresh = () => setRefresh(true)
+    }, [logsStreamReader,logchange])
+    const doLogchange = ()=>{setLogchange(!logchange)}
     async function handleLogLevelChange(logLevel: string) {
         general.logLevel = logLevel
-        doRefresh()
+        doLogchange()
     }
     return (
         <div className="page">
